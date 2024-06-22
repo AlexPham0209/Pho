@@ -98,12 +98,18 @@ TYPE Interpreter::visitPrint(Print* e) {
 }
 
 TYPE Interpreter::visitVariableDeclaration(VariableDeclaration* e) {
-	environment.createVariable(e->name, e->value);
+	TYPE value = e->value->parse(this);
+	environment.createVariable(e->name, value);
 	return TYPE();
 }
 
 TYPE Interpreter::visitVariable(Variable* e) {
-	Expression* value = environment.getVariable(e->name);
-	TYPE res = value->parse(this);
-	return res;
+	TYPE value = environment.getVariable(e->name);
+	return value;
+}
+
+TYPE Interpreter::visitVariableSet(VariableSet* e) {
+	TYPE value = e->value->parse(this);
+	environment.setVariable(e->name, value);
+	return TYPE();
 }

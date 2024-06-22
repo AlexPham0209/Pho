@@ -103,3 +103,13 @@ class Variable : public Expression {
 		Variable(std::string name);
 		TYPE parse(Visitor* v) override;
 };
+
+
+class VariableSet : public Expression {
+public:
+	std::string name;
+	Expression* value;
+
+	VariableSet(std::string name, Expression* value);
+	TYPE parse(Visitor* v) override;
+};

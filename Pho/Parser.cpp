@@ -12,8 +12,14 @@ std::vector<Expression*> Parser::createAST() {
 }
 
 Expression* Parser::declaration() {
-	if (start < tokens.size() && tokens[start].type == Set) 
+	if (start >= tokens.size())
+		return nullptr;
+
+	if (tokens[start].type == Set) 
 		return variableDeclaration();
+
+	if (tokens[start].type == Identifier)
+		return variableSet();
 
 	return statement();
 }
@@ -30,6 +36,20 @@ Expression* Parser::variableDeclaration() {
 
 	Expression* variable = new VariableDeclaration(name, value);
 	return variable;
+}
+
+Expression* Parser::variableSet() {
+	std::string name = tokens[start].value;
+	start++;
+
+	//Checking if there is a set function
+	if (start >= tokens.size() && tokens[start].type != Equal)
+		throw std::invalid_argument("Expect equals symbol");
+
+	start++;
+	Expression* value = equality();
+	Expression* variableSet = new VariableSet(name, value);
+	return variableSet;
 }
 
 std::string Parser::identifier() {
