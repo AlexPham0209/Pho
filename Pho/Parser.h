@@ -7,6 +7,7 @@ class Parser {
 		int start;
 
 		Expression* statement();
+		Expression* blocking();
 		Expression* equality();
 		Expression* comparison();
 		Expression* term();

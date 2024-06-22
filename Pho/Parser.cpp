@@ -66,14 +66,31 @@ std::string Parser::identifier() {
 }
 
 Expression* Parser::statement() {
-	if (start < tokens.size() && tokens[start].type == PrintStatement) {
+	if (start >= tokens.size())
+		return nullptr;
+
+	if (tokens[start].type == PrintStatement) {
 		start++;
 		Expression* expression = assignment();
 		Print* print = new Print(expression);
 		return print;
 	}
 
+	if (tokens[start].type == OpenCurly)
+		return blocking();
+
 	return assignment();
+}
+
+Expression* Parser::blocking() {
+	start++;
+	std::vector<Expression*> statements;
+	while (start < tokens.size() && (tokens[start].type != ClosedCurly && tokens[start].type != EndOfFile))
+		statements.push_back(declaration());
+	
+	start++;
+	Blocking* blocking = new Blocking(statements);
+	return blocking;
 }
 
 Expression* Parser::equality() {
