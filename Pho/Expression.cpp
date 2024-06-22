@@ -17,7 +17,7 @@ Variable::Variable(std::string name) : name(name) {}
 VariableDeclaration::VariableDeclaration(std::string name, Expression* value) : name(name), value(value) {}
 VariableAssign::VariableAssign(std::string name, Expression* value) : name(name), value(value) {}
 
-Blocking::Blocking(std::vector<Expression*> statements) {}
+Block::Block(std::vector<Expression*> statements) : statements(statements) {}
 
 
 TYPE Print::parse(Visitor* v) {
@@ -50,6 +50,6 @@ TYPE VariableAssign::parse(Visitor* v) {
 	return v->visitVariableAssign(this);
 }
 
-TYPE Blocking::parse(Visitor* v) {
-	return TYPE();
+TYPE Block::parse(Visitor* v) {
+	return v->visitBlock(this);
 }

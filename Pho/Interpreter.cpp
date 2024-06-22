@@ -1,5 +1,7 @@
 #include "Interpreter.h"
 
+Interpreter::Interpreter() : environment(new Environment()) {}
+
 TYPE Interpreter::visitBinary(Binary* e) {
 	TYPE leftVal = e->left->parse(this);
 	TYPE rightVal = e->right->parse(this);
@@ -99,17 +101,30 @@ TYPE Interpreter::visitPrint(Print* e) {
 
 TYPE Interpreter::visitVariableDeclaration(VariableDeclaration* e) {
 	TYPE value = e->value->parse(this);
-	environment.createVariable(e->name, value);
+	environment->createVariable(e->name, value);
 	return TYPE();
 }
 
 TYPE Interpreter::visitVariable(Variable* e) {
-	TYPE value = environment.getVariable(e->name);
+	TYPE value = environment->getVariable(e->name);
 	return value;
 }
 
 TYPE Interpreter::visitVariableAssign(VariableAssign* e) {
 	TYPE value = e->value->parse(this);
-	environment.setVariable(e->name, value);
+	environment->setVariable(e->name, value);
+	return TYPE();
+}
+
+TYPE Interpreter::visitBlock(Block* e) {
+	Environment* prev = this->environment;
+	this->environment = new Environment(prev);
+	//std::cout << "visit" << std::endl;
+
+	for (Expression* statement : e->statements)
+		statement->parse(this);
+
+	delete this->environment;
+	this->environment = prev;
 	return TYPE();
 }

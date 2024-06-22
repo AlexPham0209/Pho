@@ -3,7 +3,8 @@
 
 class Interpreter : public Visitor {
 	public:
-		Environment environment;
+		Environment* environment;
+		Interpreter();
 
 		TYPE visitBinary(Binary* e) override;
 		TYPE visitUnary(Unary* e) override;
@@ -13,4 +14,5 @@ class Interpreter : public Visitor {
 		TYPE visitVariableDeclaration(VariableDeclaration* e) override;
 		TYPE visitVariable(Variable* e) override;
 		TYPE visitVariableAssign(VariableAssign* e) override;
+		TYPE visitBlock(Block* e) override;
 };

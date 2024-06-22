@@ -85,11 +85,13 @@ Expression* Parser::statement() {
 Expression* Parser::blocking() {
 	start++;
 	std::vector<Expression*> statements;
-	while (start < tokens.size() && (tokens[start].type != ClosedCurly && tokens[start].type != EndOfFile))
+	while (start < tokens.size() && (tokens[start].type != ClosedCurly && tokens[start].type != EndOfFile)) {
+		std::cout << tokens[start].value << std::endl;
 		statements.push_back(declaration());
+	}
 	
 	start++;
-	Blocking* blocking = new Blocking(statements);
+	Block* blocking = new Block(statements);
 	return blocking;
 }
 

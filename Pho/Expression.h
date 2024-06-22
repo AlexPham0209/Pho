@@ -114,10 +114,10 @@ public:
 	TYPE parse(Visitor* v) override;
 };
 
-class Blocking : public Expression {
+class Block : public Expression {
 public:
 	std::vector<Expression*> statements;
 
-	Blocking(std::vector<Expression*> statements);
+	Block(std::vector<Expression*> statements);
 	TYPE parse(Visitor* v) override;
 };

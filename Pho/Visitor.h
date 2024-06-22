@@ -17,6 +17,7 @@ class Visitor {
 		virtual TYPE visitVariableDeclaration(VariableDeclaration* e) = 0;
 		virtual TYPE visitVariable(Variable* e) = 0;
 		virtual TYPE visitVariableAssign(VariableAssign* e) = 0;
+		virtual TYPE visitBlock(Block* e) = 0;
 };
 
 class PrintVisitor : Visitor {
