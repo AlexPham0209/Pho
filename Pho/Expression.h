@@ -8,7 +8,7 @@
 #define TYPE std::variant<double, bool, std::string>
 
 enum DataType {
-	FLOAT,
+	DOUBLE,
 	STRING,
 	BOOL,
 	NONE,
@@ -68,7 +68,7 @@ class Literal : public Expression {
 		DataType dataType;
 	
 		Literal(TYPE val);
-		Literal(float val);
+		Literal(double val);
 		Literal(bool val);
 		Literal(std::string val);
 	

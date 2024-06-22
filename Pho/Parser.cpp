@@ -7,7 +7,6 @@ std::vector<Expression*> Parser::createAST() {
 	
 	while (start < tokens.size() && tokens[start].type != EndOfFile) 
 		statements.push_back(declaration());
-		
 	
 	return statements;
 }
@@ -28,15 +27,19 @@ Expression* Parser::declaration() {
 Expression* Parser::variableDeclaration() {
 	std::string name = identifier();
 	start++;
+	Expression* variable;
+
+	if (start >= tokens.size())
+		throw std::invalid_argument("end");
+
 	//Checking if there is a set function
-	if (start >= tokens.size() && tokens[start].type != Equal)
-		throw std::invalid_argument("Expect equals symbol");
+	if (tokens[start].type != Equal) {
+		Expression* value = (Expression*)(new Literal((double)NULL));
+		return new VariableDeclaration(name, value);
+	}
 
 	start++;
-	Expression* value = equality();
-
-	Expression* variable = new VariableDeclaration(name, value);
-	return variable;
+	return new VariableDeclaration(name, equality());
 }
 
 Expression* Parser::variableSet() {

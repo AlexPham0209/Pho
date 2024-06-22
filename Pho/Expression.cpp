@@ -7,7 +7,7 @@ Binary::Binary(Expression* left, Expression* right, TokenType op) : left(left), 
 Unary::Unary(Expression* expression, TokenType op) : expression(expression), op(op) {}
 
 Literal::Literal(TYPE val) : val(val), dataType(NONE) {}
-Literal::Literal(float val) : val(val), dataType(FLOAT) {}
+Literal::Literal(double val) : val(val), dataType(DOUBLE) {}
 Literal::Literal(bool val) : val(val), dataType(BOOL) {}
 Literal::Literal(std::string val) : val(val), dataType(STRING) {}
 
