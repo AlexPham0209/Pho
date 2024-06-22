@@ -35,8 +35,8 @@ int main() {
 	Lexer lexer(readFile("C:/Users/RedAP/Desktop/PrintTest.txt"));
 	std::vector<Token> tokens = lexer.tokenize();
 
-	/*for (Token token : tokens)
-		std::cout << token.value << ", " << token.type << std::endl;*/
+	//for (Token token : tokens)
+	//	std::cout << token.value << ", " << token.type << std::endl;
 
 	//Parses the resulting tokens and creates an Abstract Syntax Tree 
 	Parser parser(tokens);

@@ -7,6 +7,7 @@ std::vector<Expression*> Parser::createAST() {
 	
 	while (start < tokens.size() && tokens[start].type != EndOfFile) 
 		statements.push_back(declaration());
+		
 	
 	return statements;
 }

@@ -127,15 +127,12 @@ Token Lexer::createStringToken() {
 	return Token{ word, String };
 }
 
-Token Lexer::createCommentToken() {
+void Lexer::skipComment() {
 	int end = start + 1;
 	while (end < src.length() && src[end] != '\n')
 		end++;
 
-	std::string word = src.substr(start + 1, end - start - 1);
 	start = end + 1;
-
-	return Token{ word, Comment };
 }
 
 //Creates single character token
@@ -191,9 +188,6 @@ Token Lexer::createToken(char val) {
 	case '/':
 		if (checkNextCharacter('='))
 			return createToken("/=", DivAssign);
-
-		else if (checkNextCharacter('/'))
-			return createCommentToken();
 
 		return createToken(Divide);
 
@@ -255,6 +249,11 @@ std::vector<Token> Lexer::tokenize() {
 
 	while (start < src.length()) {
 		char val = src[start];
+
+		if (val == '/' && checkNextCharacter('/')) {
+			skipComment();
+			continue;
+		}
 
 		if (val != ' ' && val != '\n' && val != '\r' && val != '\t') {
 			Token current = createToken(val);

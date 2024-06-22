@@ -92,7 +92,7 @@ private:
 	Token createMultiCharacterToken();
 	Token createNumericToken();
 	Token createStringToken();
-	Token createCommentToken();
+	void skipComment();
 	Token createToken(TokenType type);
 	Token createToken(std::string val, TokenType type);
 	Token createToken(char val);
