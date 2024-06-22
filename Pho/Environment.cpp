@@ -5,7 +5,14 @@ Environment::Environment() : prev(nullptr) {}
 Environment::Environment(Environment* prev) : prev(prev) {}
 
 void Environment::createVariable(std::string name, TYPE value) {
-	values[name] = value;
+	if (!values.count(name))
+		values[name] = value;
+	
+	else if (prev != nullptr) 
+		prev->createVariable(name, value);
+
+	else
+		throw std::invalid_argument("bruh");
 }
 
 void Environment::setVariable(std::string name, TYPE value) {
