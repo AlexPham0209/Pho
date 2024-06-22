@@ -15,7 +15,7 @@ Grouping::Grouping(Expression* expression) : expression(expression) {}
 
 Variable::Variable(std::string name) : name(name) {}
 VariableDeclaration::VariableDeclaration(std::string name, Expression* value) : name(name), value(value) {}
-VariableSet::VariableSet(std::string name, Expression* value) : name(name), value(value) {}
+VariableAssign::VariableAssign(std::string name, Expression* value) : name(name), value(value) {}
 
 
 TYPE Print::parse(Visitor* v) {
@@ -44,6 +44,6 @@ TYPE VariableDeclaration::parse(Visitor* v) {
 TYPE Variable::parse(Visitor* v) {
 	return v->visitVariable(this);
 }
-TYPE VariableSet::parse(Visitor* v) {
-	return v->visitVariableSet(this);
+TYPE VariableAssign::parse(Visitor* v) {
+	return v->visitVariableAssign(this);
 }

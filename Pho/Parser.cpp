@@ -18,9 +18,6 @@ Expression* Parser::declaration() {
 	if (tokens[start].type == Set) 
 		return variableDeclaration();
 
-	if (tokens[start].type == Identifier)
-		return variableSet();
-
 	return statement();
 }
 
@@ -42,18 +39,22 @@ Expression* Parser::variableDeclaration() {
 	return new VariableDeclaration(name, equality());
 }
 
-Expression* Parser::variableSet() {
-	std::string name = tokens[start].value;
-	start++;
+Expression* Parser::assignment() {
+	Expression* e = equality();
+	
+	if (start <= tokens.size() && tokens[start].type == Equal) {
+		start++;
+		Expression* value = assignment();
 
-	//Checking if there is a set function
-	if (start >= tokens.size() && tokens[start].type != Equal)
-		throw std::invalid_argument("Expect equals symbol");
+		if (Variable* v = dynamic_cast<Variable*>(e)) {
+			Expression* assign = new VariableAssign(v->name, value);
+			return assign;
+		}
 
-	start++;
-	Expression* value = equality();
-	Expression* variableSet = new VariableSet(name, value);
-	return variableSet;
+		throw std::invalid_argument("Not a variable");
+	}
+
+	return e;
 }
 
 std::string Parser::identifier() {
@@ -67,12 +68,12 @@ std::string Parser::identifier() {
 Expression* Parser::statement() {
 	if (start < tokens.size() && tokens[start].type == PrintStatement) {
 		start++;
-		Expression* expression = equality();
+		Expression* expression = assignment();
 		Print* print = new Print(expression);
 		return print;
 	}
 
-	return equality();
+	return assignment();
 }
 
 Expression* Parser::equality() {

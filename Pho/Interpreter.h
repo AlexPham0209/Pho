@@ -12,5 +12,5 @@ class Interpreter : public Visitor {
 		TYPE visitPrint(Print* e) override;
 		TYPE visitVariableDeclaration(VariableDeclaration* e) override;
 		TYPE visitVariable(Variable* e) override;
-		TYPE visitVariableSet(VariableSet* e) override;
+		TYPE visitVariableAssign(VariableAssign* e) override;
 };

@@ -108,7 +108,7 @@ TYPE Interpreter::visitVariable(Variable* e) {
 	return value;
 }
 
-TYPE Interpreter::visitVariableSet(VariableSet* e) {
+TYPE Interpreter::visitVariableAssign(VariableAssign* e) {
 	TYPE value = e->value->parse(this);
 	environment.setVariable(e->name, value);
 	return TYPE();

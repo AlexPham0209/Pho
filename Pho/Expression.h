@@ -105,11 +105,19 @@ class Variable : public Expression {
 };
 
 
-class VariableSet : public Expression {
+class VariableAssign : public Expression {
 public:
 	std::string name;
 	Expression* value;
 
-	VariableSet(std::string name, Expression* value);
+	VariableAssign(std::string name, Expression* value);
+	TYPE parse(Visitor* v) override;
+};
+
+class Blocking : public Expression {
+public:
+	std::vector<Expression*> statements;
+
+	Blocking(std::vector<Expression*> statements);
 	TYPE parse(Visitor* v) override;
 };
