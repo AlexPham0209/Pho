@@ -6,9 +6,6 @@ TYPE Interpreter::visitBinary(Binary* e) {
 	TYPE leftVal = e->left->parse(this);
 	TYPE rightVal = e->right->parse(this);
 	TokenType sign = e->op;
-
-	if (!holds_alternative<double>(leftVal) || !holds_alternative<double>(rightVal))
-		return TYPE();
 	TYPE res;
 
 	switch (sign) {
@@ -119,12 +116,24 @@ TYPE Interpreter::visitVariableAssign(VariableAssign* e) {
 TYPE Interpreter::visitBlock(Block* e) {
 	Environment* prev = this->environment;
 	this->environment = new Environment(prev);
-	//std::cout << "visit" << std::endl;
-
-	for (Expression* statement : e->statements)
+	
+	for (Expression* statement : e->statements) 
 		statement->parse(this);
-
+	
+	
 	delete this->environment;
 	this->environment = prev;
+	return TYPE();
+}
+
+TYPE Interpreter::visitIfStatement(IfStatement* e) {
+	TYPE condition = e->condition->parse(this);
+
+	if (!holds_alternative<bool>(condition))
+		throw std::invalid_argument("No boolean arguments"); 
+	
+	if (get<bool>(condition)) 
+		e->block->parse(this);
+	
 	return TYPE();
 }

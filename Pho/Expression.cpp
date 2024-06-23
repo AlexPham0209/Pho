@@ -18,6 +18,7 @@ VariableDeclaration::VariableDeclaration(std::string name, Expression* value) : 
 VariableAssign::VariableAssign(std::string name, Expression* value) : name(name), value(value) {}
 
 Block::Block(std::vector<Expression*> statements) : statements(statements) {}
+IfStatement::IfStatement(Expression* condition, Block* block) : condition(condition), block(block) {}
 
 
 TYPE Print::parse(Visitor* v) {
@@ -52,4 +53,8 @@ TYPE VariableAssign::parse(Visitor* v) {
 
 TYPE Block::parse(Visitor* v) {
 	return v->visitBlock(this);
+}
+
+TYPE IfStatement::parse(Visitor* v) {
+	return v->visitIfStatement(this);
 }

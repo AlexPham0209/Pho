@@ -32,7 +32,7 @@ int main() {
 	std::cout << std::endl;*/
 
 	//Converts the inputted string into a series of tokens
-	Lexer lexer(readFile("C:/Users/RedAP/Desktop/PrintTest.txt"));
+	Lexer lexer(readFile("C:/Users/RedAP/Desktop/ConditionalTest.txt"));
 	std::vector<Token> tokens = lexer.tokenize();
 
 	//for (Token token : tokens)

@@ -15,4 +15,5 @@ class Interpreter : public Visitor {
 		TYPE visitVariable(Variable* e) override;
 		TYPE visitVariableAssign(VariableAssign* e) override;
 		TYPE visitBlock(Block* e) override;
+		TYPE visitIfStatement(IfStatement* e) override;
 };

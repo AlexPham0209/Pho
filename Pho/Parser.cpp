@@ -21,6 +21,30 @@ Expression* Parser::declaration() {
 	return statement();
 }
 
+Expression* Parser::ifStatement() {
+	start++;
+
+	//Getting conditions
+	if (tokens[start].type != OpenBracket)
+		throw std::invalid_argument("No open brackets");
+
+	start++;
+	Expression* condition = equality();
+
+	if (tokens[start].type != ClosedBracket)
+		throw std::invalid_argument("No closed brackets");
+
+	//Making sure that 
+	start++;
+	if (tokens[start].type != OpenCurly)
+		throw std::invalid_argument("No Blocking");
+
+	Block* block = (Block*)blocking();
+
+	IfStatement* statement = new IfStatement(condition, block);
+	return statement;
+}
+
 Expression* Parser::variableDeclaration() {
 	std::string name = identifier();
 	start++;
@@ -79,16 +103,17 @@ Expression* Parser::statement() {
 	if (tokens[start].type == OpenCurly)
 		return blocking();
 
+	if (tokens[start].type == If)
+		return ifStatement();
+
 	return assignment();
 }
 
 Expression* Parser::blocking() {
 	start++;
 	std::vector<Expression*> statements;
-	while (start < tokens.size() && (tokens[start].type != ClosedCurly && tokens[start].type != EndOfFile)) {
-		std::cout << tokens[start].value << std::endl;
+	while (start < tokens.size() && (tokens[start].type != ClosedCurly && tokens[start].type != EndOfFile)) 
 		statements.push_back(declaration());
-	}
 	
 	start++;
 	Block* blocking = new Block(statements);

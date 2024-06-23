@@ -121,3 +121,12 @@ public:
 	Block(std::vector<Expression*> statements);
 	TYPE parse(Visitor* v) override;
 };
+
+class IfStatement : public Expression {
+	public:
+		Expression* condition;
+		Block* block;
+
+		IfStatement(Expression* condition, Block* block);		
+		TYPE parse(Visitor* v) override;
+};

@@ -15,6 +15,7 @@ class Parser {
 		Expression* unary();
 		Expression* primary();
 		Expression* declaration();
+		Expression* ifStatement();
 		Expression* variableDeclaration();
 		Expression* assignment();
 		std::string identifier();
