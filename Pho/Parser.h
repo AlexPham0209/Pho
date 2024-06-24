@@ -1,5 +1,6 @@
 #include "Expression.h"
 #include "Tokenizer.h"
+#include "Error.h"
 
 class Parser {
 	private:
@@ -14,6 +15,7 @@ class Parser {
 		Expression* factor();
 		Expression* unary();
 		Expression* primary();
+		void syntaxError(int line, std::string message);
 		Expression* declaration();
 		Expression* ifStatement();
 		Expression* variableDeclaration();

@@ -72,7 +72,7 @@ std::map<TokenType, std::string> types = {
 	{Comma, "Comma"},
 };
 
-Lexer::Lexer(std::string src) : src(src), start(0) {}
+Lexer::Lexer(std::string src) : src(src), start(0), line(1) {}
 
 bool Lexer::isNumeric(char val) {
 	return val >= 48 && val <= 57;
@@ -101,7 +101,7 @@ Token Lexer::createMultiCharacterToken() {
 	if (keywords.count(word))
 		return Token{word, keywords[word]};
 
-	return Token{ word, Identifier };
+	return Token{ word, Identifier, line};
 }
 
 //Creates a numerical token type
@@ -113,7 +113,7 @@ Token Lexer::createNumericToken() {
 	std::string word = src.substr(start, end - start);
 	start = end;
 
-	return Token{ word, Number };
+	return Token{ word, Number, line};
 }
 
 Token Lexer::createStringToken() {
@@ -124,7 +124,7 @@ Token Lexer::createStringToken() {
 	std::string word = src.substr(start + 1, end - start - 1);
 	start = end + 1;
 
-	return Token{ word, String };
+	return Token{ word, String, line};
 }
 
 void Lexer::skipComment() {
@@ -138,13 +138,13 @@ void Lexer::skipComment() {
 //Creates single character token
 Token Lexer::createToken(TokenType type) {
 	std::string val{ src[start++] };
-	return Token{ val, type };
+	return Token{val, type, line};
 }
 
 //Creates single character token
 Token Lexer::createToken(std::string val, TokenType type) {
 	start++;
-	return Token{ val, type };
+	return Token{val, type, line};
 }
 
 Token Lexer::createToken(char val) {
@@ -254,6 +254,9 @@ std::vector<Token> Lexer::tokenize() {
 			skipComment();
 			continue;
 		}
+
+		if (val == '\n')
+			line++;
 
 		if (val != ' ' && val != '\n' && val != '\r' && val != '\t') {
 			Token current = createToken(val);

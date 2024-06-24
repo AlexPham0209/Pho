@@ -77,6 +77,7 @@ enum TokenType {
 struct Token {
 	std::string value;
 	TokenType type;
+	int line;
 };
 
 extern std::map<std::string, TokenType> keywords;
@@ -86,6 +87,7 @@ class Lexer {
 private:
 	std::string src;
 	int start;
+	int line;
 
 	bool isNumeric(char val);
 	bool checkNextCharacter(char val);
