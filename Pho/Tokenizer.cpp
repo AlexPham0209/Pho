@@ -99,7 +99,7 @@ Token Lexer::createMultiCharacterToken() {
 
 	//If in keywords 
 	if (keywords.count(word))
-		return Token{word, keywords[word]};
+		return Token{word, keywords[word], line};
 
 	return Token{ word, Identifier, line};
 }
@@ -241,7 +241,8 @@ Token Lexer::createToken(char val) {
 
 	}
 
-	return Token{ "", Invalid };
+	start++;
+	return Token{"", Invalid, line};
 }
 
 std::vector<Token> Lexer::tokenize() {
@@ -255,16 +256,19 @@ std::vector<Token> Lexer::tokenize() {
 			continue;
 		}
 
-		if (val == '\n')
+		if (val == '\n') {
+			start++;
 			line++;
-
-		if (val != ' ' && val != '\n' && val != '\r' && val != '\t') {
-			Token current = createToken(val);
-			tokens.push_back(current);
 			continue;
 		}
 
-		start++;
+		if (val == ' ' || val == '\r' || val == '\t') {
+			start++;
+			continue;
+		}
+
+		Token current = createToken(val);
+		tokens.push_back(current);
 	}
 
 	tokens.push_back(createToken("EOF", EndOfFile));

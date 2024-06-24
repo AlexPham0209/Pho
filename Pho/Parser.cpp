@@ -26,18 +26,18 @@ Expression* Parser::ifStatement() {
 
 	//Getting conditions
 	if (tokens[start].type != OpenBracket)
-		syntaxError(tokens[start].line, "No open bracket");
+		throw SyntaxError(tokens[start].line, "No open brackets");
 
 	start++;
 	Expression* condition = equality();
 
 	if (tokens[start].type != ClosedBracket)
-		syntaxError(tokens[start].line, "No closed bracket");
+		throw SyntaxError(tokens[start].line, "No closed brackets");
 
 	//Making sure that 
 	start++;
 	if (tokens[start].type != OpenCurly)
-		syntaxError(tokens[start].line, "No block");
+		throw SyntaxError(tokens[start].line, "No block");
 
 	Block* block = (Block*)blocking();
 
@@ -51,7 +51,7 @@ Expression* Parser::variableDeclaration() {
 	Expression* variable;
 
 	if (start >= tokens.size())
-		throw std::invalid_argument("end");
+		throw SyntaxError(tokens[start].line, "At end");
 
 	//Checking if there is a set function
 	if (tokens[start].type != Equal) {
@@ -75,7 +75,7 @@ Expression* Parser::assignment() {
 			return assign;
 		}
 
-		syntaxError(tokens[start].line, "Not a valid variable for assignment");
+		throw SyntaxError(tokens[start].line, "Not valid variable");
 	}
 
 	return e;
@@ -83,9 +83,9 @@ Expression* Parser::assignment() {
 
 std::string Parser::identifier() {
 	start++;
-	if (start < tokens.size() && tokens[start].type != Identifier)
-		syntaxError(tokens[start].line, "Current token is not an identifier");
-
+	if (start < tokens.size() && tokens[start].type != Identifier) 
+		throw SyntaxError(tokens[start].line, "Not an identifier");
+	
 	return tokens[start].value;
 }
 
@@ -219,7 +219,7 @@ Expression* Parser::primary() {
 			return res;
 	}
 
-	syntaxError(token.line, "Not a Literal");
+	throw SyntaxError(token.line, "Not a literal");
 }
 
 void Parser::syntaxError(int line, std::string message) {

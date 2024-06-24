@@ -40,7 +40,14 @@ int main() {
 
 	//Parses the resulting tokens and creates an Abstract Syntax Tree 
 	Parser parser(tokens);
-	std::vector<Expression*> statements = parser.createAST();
+	std::vector<Expression*> statements;
+
+	try {
+		statements = parser.createAST();
+	}
+	catch (SyntaxError& e) {
+		std::cout << e.what() << std::endl;
+	}
 
 	//By using the visitor pattern, we are able to create derived vistor objects that can explore the resulting tree and print out result
 	Interpreter interpreter;
