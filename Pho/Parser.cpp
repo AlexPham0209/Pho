@@ -24,7 +24,7 @@ Expression* Parser::declaration() {
 Expression* Parser::statement() {
 	if (start >= tokens.size())
 		throw SyntaxError(0, "At end");
-
+	
 	switch (tokens[start].type) {
 		case OpenCurly:
 			return blocking();
@@ -34,6 +34,9 @@ Expression* Parser::statement() {
 
 		case While:
 			return whileLoop();
+
+		case For:
+			return forLoop();
 
 		case PrintStatement:
 			start++;
@@ -49,20 +52,12 @@ Expression* Parser::ifStatement() {
 	start++;
 
 	//Getting conditions
-	if (tokens[start].type != OpenBracket)
-		throw SyntaxError(tokens[start].line, "No open brackets");
-
-	start++;
+	consume(OpenBracket, "No open bracket");
 	Expression* condition = equality();
+	consume(ClosedBracket, "No closed bracket");
 
-	if (tokens[start].type != ClosedBracket)
-		throw SyntaxError(tokens[start].line, "No closed brackets");
-
-	//Making sure that bracket is complete
+	//Creating then block
 	start++;
-	if (tokens[start].type != OpenCurly)
-		throw SyntaxError(tokens[start].line, "No block");
-
 	Block* block = (Block*)blocking();
 
 	//Create else statement
@@ -71,6 +66,7 @@ Expression* Parser::ifStatement() {
 	if (tokens[start].type == Else)
 		elseBlock = (Block*)blocking();
 
+	//Instantiating if statement object that is allocated to the heap
 	IfStatement* statement = new IfStatement(condition, block, elseBlock);
 	return statement;
 }
@@ -79,19 +75,9 @@ Expression* Parser::whileLoop() {
 	start++;
 
 	//Getting conditions
-	if (tokens[start].type != OpenBracket)
-		throw SyntaxError(tokens[start].line, "No open brackets");
-
-	start++;
+	consume(OpenBracket, "No open bracket");
 	Expression* condition = equality();
-
-	if (tokens[start].type != ClosedBracket)
-		throw SyntaxError(tokens[start].line, "No closed brackets");
-
-	//Making sure that bracket is complete
-	start++;
-	if (tokens[start].type != OpenCurly)
-		throw SyntaxError(tokens[start].line, "No block");
+	consume(ClosedBracket, "No closed bracket");
 
 	Block* block = (Block*)blocking();
 
@@ -99,7 +85,52 @@ Expression* Parser::whileLoop() {
 	return loop;
 }
 
+Expression* Parser::forLoop() {
+	start++;
+	consume(OpenBracket, "No open bracket");
+	Expression* initializer; 
+
+	//Set initializer statement
+	if (tokens[start].type == Colon)
+		initializer = nullptr;
+	else if (tokens[start].type == Set)
+		initializer = variableDeclaration();
+	else
+		initializer = equality();
+	
+	//Set condition 
+	consume(Colon, "Expect ':' after for clauses");
+	Expression* condition = equality();
+
+
+	//Set increment
+	consume(Colon, "Expect ':' after for clauses");
+	Expression* increment = nullptr;
+	if (tokens[start].type != ClosedBracket) 
+		increment = declaration();
+	consume(ClosedBracket, "Expect ']' after increment");
+	
+	//Create block
+	Block* block = (Block*)blocking();
+
+	//Assembling while loop
+	std::vector<Expression*> body;
+	body.push_back(block);
+	body.push_back(increment);
+
+	WhileLoop* forBody = new WhileLoop(condition, new Block(body));
+
+	std::vector<Expression*> res;
+	res.push_back(initializer);
+	res.push_back(forBody);
+
+	return new Block(res);
+}
+
 Expression* Parser::blocking() {
+	if (tokens[start].type != OpenCurly)
+		throw SyntaxError(tokens[start].line, "No block");
+
 	start++;
 	std::vector<Expression*> statements;
 	while (start < tokens.size() && (tokens[start].type != ClosedCurly && tokens[start].type != EndOfFile))
@@ -255,4 +286,11 @@ Expression* Parser::primary() {
 	}
 
 	throw SyntaxError(token.line, "Not a literal");
+}
+
+void Parser::consume(TokenType token, std::string message) {
+	if (tokens[start].type != token)
+		throw SyntaxError(tokens[start].line, message.c_str());
+
+	start++;
 }

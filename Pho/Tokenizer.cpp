@@ -239,6 +239,8 @@ Token Lexer::createToken(char val) {
 	case '^':
 		return createToken(Xor);
 
+	case ':':
+		return createToken(Colon);
 	}
 
 	start++;

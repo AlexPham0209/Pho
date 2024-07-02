@@ -15,9 +15,11 @@ class Parser {
 		Expression* factor();
 		Expression* unary();
 		Expression* primary();
+		void consume(TokenType token, std::string message);
 		Expression* declaration();
 		Expression* ifStatement();
 		Expression* whileLoop();
+		Expression* forLoop();
 		Expression* variableDeclaration();
 		Expression* assignment();
 		std::string identifier();

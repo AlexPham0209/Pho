@@ -146,3 +146,9 @@ class WhileLoop : public Expression {
 		WhileLoop(Expression* condition, Block* block);
 		TYPE parse(Visitor* v) override;
 };
+
+class ForLoop : public Expression {
+
+
+
+};

@@ -72,6 +72,7 @@ enum TokenType {
 	PrintStatement,
 	Invalid,
 	EndOfFile,
+	Colon,
 };
 
 struct Token {
