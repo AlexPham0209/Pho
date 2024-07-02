@@ -75,7 +75,7 @@ std::map<TokenType, std::string> types = {
 Lexer::Lexer(std::string src) : src(src), start(0), line(1) {}
 
 bool Lexer::isNumeric(char val) {
-	return val >= 48 && val <= 57;
+	return val >= '0' && val <= '9';
 }
 
 bool Lexer::checkNextCharacter(char val) {
@@ -250,20 +250,24 @@ Token Lexer::createToken(char val) {
 std::vector<Token> Lexer::tokenize() {
 	std::vector<Token> tokens;
 
+	//Iterate through the string/file 
 	while (start < src.length()) {
 		char val = src[start];
 
+		//If current and next position are both equal to / (//) then create a comment token
 		if (val == '/' && checkNextCharacter('/')) {
 			skipComment();
 			continue;
 		}
 
+		//If current position has end of line character, then update current line position
 		if (val == '\n') {
 			start++;
 			line++;
 			continue;
 		}
 
+		//Ignore these characters
 		if (val == ' ' || val == '\r' || val == '\t') {
 			start++;
 			continue;
