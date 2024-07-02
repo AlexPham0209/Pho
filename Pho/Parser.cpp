@@ -114,15 +114,10 @@ Expression* Parser::forLoop() {
 	Block* block = (Block*)blocking();
 
 	//Assembling while loop
-	std::vector<Expression*> body;
-	body.push_back(block);
-	body.push_back(increment);
-
+	std::vector<Expression*> body = {block, increment};
 	WhileLoop* forBody = new WhileLoop(condition, new Block(body));
 
-	std::vector<Expression*> res;
-	res.push_back(initializer);
-	res.push_back(forBody);
+	std::vector<Expression*> res = {initializer, forBody};
 
 	return new Block(res);
 }

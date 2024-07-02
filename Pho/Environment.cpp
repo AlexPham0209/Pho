@@ -5,7 +5,6 @@ Environment::Environment() : prev(nullptr) {}
 Environment::Environment(Environment* prev) : prev(prev) {}
 
 void Environment::createVariable(std::string name, TYPE value) {
-	std::cout << name << ": " << get<double>(value) << std::endl;
 	if (!values.count(name))
 		values[name] = value;
 	
