@@ -139,3 +139,14 @@ TYPE Interpreter::visitIfStatement(IfStatement* e) {
 	
 	return TYPE();
 }
+
+TYPE Interpreter::visitWhileLoop(WhileLoop* e) {
+	TYPE condition = e->condition->parse(this);
+
+	while (holds_alternative<bool>(condition) && get<bool>(condition)) {
+		e->block->parse(this);
+		condition = e->condition->parse(this);
+	}
+
+	return TYPE();
+}

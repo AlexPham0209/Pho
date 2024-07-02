@@ -17,7 +17,7 @@ class Parser {
 		Expression* primary();
 		Expression* declaration();
 		Expression* ifStatement();
-		Expression* forLoop();
+		Expression* whileLoop();
 		Expression* variableDeclaration();
 		Expression* assignment();
 		std::string identifier();

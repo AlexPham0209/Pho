@@ -129,5 +129,20 @@ class IfStatement : public Expression {
 		Block* elseBlock;
 
 		IfStatement(Expression* condition, Block* ifBlock, Block* elseBlock);
+		~IfStatement() {
+			delete condition;
+			delete ifBlock;
+			delete elseBlock;
+		}
+
+		TYPE parse(Visitor* v) override;
+};
+
+class WhileLoop : public Expression {
+	public:
+		Expression* condition;
+		Block* block;
+
+		WhileLoop(Expression* condition, Block* block);
 		TYPE parse(Visitor* v) override;
 };

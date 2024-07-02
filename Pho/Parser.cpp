@@ -32,8 +32,8 @@ Expression* Parser::statement() {
 		case If:
 			return ifStatement();
 
-		case For:
-			return forLoop();
+		case While:
+			return whileLoop();
 
 		case PrintStatement:
 			start++;
@@ -75,10 +75,28 @@ Expression* Parser::ifStatement() {
 	return statement;
 }
 
-Expression* Parser::forLoop() {
+Expression* Parser::whileLoop() {
 	start++;
 
-	return nullptr;
+	//Getting conditions
+	if (tokens[start].type != OpenBracket)
+		throw SyntaxError(tokens[start].line, "No open brackets");
+
+	start++;
+	Expression* condition = equality();
+
+	if (tokens[start].type != ClosedBracket)
+		throw SyntaxError(tokens[start].line, "No closed brackets");
+
+	//Making sure that bracket is complete
+	start++;
+	if (tokens[start].type != OpenCurly)
+		throw SyntaxError(tokens[start].line, "No block");
+
+	Block* block = (Block*)blocking();
+
+	WhileLoop* loop = new WhileLoop(condition, block);
+	return loop;
 }
 
 Expression* Parser::blocking() {

@@ -20,6 +20,7 @@ VariableAssign::VariableAssign(std::string name, Expression* value) : name(name)
 Block::Block(std::vector<Expression*> statements) : statements(statements) {}
 IfStatement::IfStatement(Expression* condition, Block* ifBlock, Block* elseBlock) : condition(condition), ifBlock(ifBlock), elseBlock(elseBlock) {}
 
+WhileLoop::WhileLoop(Expression* condition, Block* block) : condition(condition), block(block) {}
 
 TYPE Print::parse(Visitor* v) {
 	return v->visitPrint(this);
@@ -57,4 +58,8 @@ TYPE Block::parse(Visitor* v) {
 
 TYPE IfStatement::parse(Visitor* v) {
 	return v->visitIfStatement(this);
+}
+
+TYPE WhileLoop::parse(Visitor* v) {
+	return v->visitWhileLoop(this);
 }
