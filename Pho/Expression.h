@@ -125,8 +125,9 @@ public:
 class IfStatement : public Expression {
 	public:
 		Expression* condition;
-		Block* block;
+		Block* ifBlock;
+		Block* elseBlock;
 
-		IfStatement(Expression* condition, Block* block);		
+		IfStatement(Expression* condition, Block* ifBlock, Block* elseBlock);
 		TYPE parse(Visitor* v) override;
 };

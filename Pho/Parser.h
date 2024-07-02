@@ -15,9 +15,9 @@ class Parser {
 		Expression* factor();
 		Expression* unary();
 		Expression* primary();
-		void syntaxError(int line, std::string message);
 		Expression* declaration();
 		Expression* ifStatement();
+		Expression* forLoop();
 		Expression* variableDeclaration();
 		Expression* assignment();
 		std::string identifier();

@@ -25,10 +25,13 @@ private:
 	std::string message;
 
 public:
-	const char* what() const throw() {
+	RuntimeError(std::string message) {
 		std::stringstream stream;
-		stream << "Runtime Error: " << message << std::endl;
-		return stream.str().c_str();
+		stream << "Runtime error: " << message << "\n";
+		this->message = stream.str();
+	}
+	const char* what() const throw() {
+		return message.c_str();
 	}
 
 };

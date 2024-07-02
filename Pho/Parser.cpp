@@ -21,6 +21,30 @@ Expression* Parser::declaration() {
 	return statement();
 }
 
+Expression* Parser::statement() {
+	if (start >= tokens.size())
+		throw SyntaxError(0, "At end");
+
+	switch (tokens[start].type) {
+		case OpenCurly:
+			return blocking();
+
+		case If:
+			return ifStatement();
+
+		case For:
+			return forLoop();
+
+		case PrintStatement:
+			start++;
+			Expression* expression = assignment();
+			Print* print = new Print(expression);
+			return print;
+	}
+
+	return assignment();
+}
+
 Expression* Parser::ifStatement() {
 	start++;
 
@@ -34,15 +58,38 @@ Expression* Parser::ifStatement() {
 	if (tokens[start].type != ClosedBracket)
 		throw SyntaxError(tokens[start].line, "No closed brackets");
 
-	//Making sure that 
+	//Making sure that bracket is complete
 	start++;
 	if (tokens[start].type != OpenCurly)
 		throw SyntaxError(tokens[start].line, "No block");
 
 	Block* block = (Block*)blocking();
 
-	IfStatement* statement = new IfStatement(condition, block);
+	//Create else statement
+	Block* elseBlock = nullptr;
+
+	if (tokens[start].type == Else)
+		elseBlock = (Block*)blocking();
+
+	IfStatement* statement = new IfStatement(condition, block, elseBlock);
 	return statement;
+}
+
+Expression* Parser::forLoop() {
+	start++;
+
+	return nullptr;
+}
+
+Expression* Parser::blocking() {
+	start++;
+	std::vector<Expression*> statements;
+	while (start < tokens.size() && (tokens[start].type != ClosedCurly && tokens[start].type != EndOfFile))
+		statements.push_back(declaration());
+
+	start++;
+	Block* blocking = new Block(statements);
+	return blocking;
 }
 
 Expression* Parser::variableDeclaration() {
@@ -89,36 +136,6 @@ std::string Parser::identifier() {
 	return tokens[start].value;
 }
 
-Expression* Parser::statement() {
-	if (start >= tokens.size())
-		return nullptr;
-
-	if (tokens[start].type == PrintStatement) {
-		start++;
-		Expression* expression = assignment();
-		Print* print = new Print(expression);
-		return print;
-	}
-
-	if (tokens[start].type == OpenCurly)
-		return blocking();
-
-	if (tokens[start].type == If)
-		return ifStatement();
-
-	return assignment();
-}
-
-Expression* Parser::blocking() {
-	start++;
-	std::vector<Expression*> statements;
-	while (start < tokens.size() && (tokens[start].type != ClosedCurly && tokens[start].type != EndOfFile)) 
-		statements.push_back(declaration());
-	
-	start++;
-	Block* blocking = new Block(statements);
-	return blocking;
-}
 
 Expression* Parser::equality() {
 	Expression* res = comparison();
@@ -220,14 +237,4 @@ Expression* Parser::primary() {
 	}
 
 	throw SyntaxError(token.line, "Not a literal");
-}
-
-void Parser::syntaxError(int line, std::string message) {
-	try {
-		throw SyntaxError(line, message.c_str());
-	}
-	catch (SyntaxError& err) {
-		std::cout << err.what() << std::endl;
-		exit(0);
-	}
 }

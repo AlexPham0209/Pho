@@ -132,8 +132,10 @@ TYPE Interpreter::visitIfStatement(IfStatement* e) {
 	if (!holds_alternative<bool>(condition))
 		throw std::invalid_argument("No boolean arguments"); 
 	
-	if (get<bool>(condition)) 
-		e->block->parse(this);
+	if (get<bool>(condition))
+		e->ifBlock->parse(this);
+	else
+		e->elseBlock->parse(this);
 	
 	return TYPE();
 }

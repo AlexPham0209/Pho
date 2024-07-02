@@ -18,7 +18,7 @@ VariableDeclaration::VariableDeclaration(std::string name, Expression* value) : 
 VariableAssign::VariableAssign(std::string name, Expression* value) : name(name), value(value) {}
 
 Block::Block(std::vector<Expression*> statements) : statements(statements) {}
-IfStatement::IfStatement(Expression* condition, Block* block) : condition(condition), block(block) {}
+IfStatement::IfStatement(Expression* condition, Block* ifBlock, Block* elseBlock) : condition(condition), ifBlock(ifBlock), elseBlock(elseBlock) {}
 
 
 TYPE Print::parse(Visitor* v) {
