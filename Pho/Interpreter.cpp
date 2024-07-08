@@ -56,6 +56,10 @@ TYPE Interpreter::visitBinary(Binary* e) {
 	case Or:
 		res = (bool)(get<bool>(leftVal) || get<bool>(rightVal));
 		break;
+
+	case Divisible:
+		res = (double)((int)get<double>(leftVal) % (int)get<double>(rightVal));
+		break;
 	}
 
 	return res;
@@ -134,7 +138,7 @@ TYPE Interpreter::visitIfStatement(IfStatement* e) {
 	
 	if (get<bool>(condition))
 		e->ifBlock->parse(this);
-	else
+	else if (e->elseBlock != nullptr)
 		e->elseBlock->parse(this);
 	
 	return TYPE();
@@ -148,5 +152,24 @@ TYPE Interpreter::visitWhileLoop(WhileLoop* e) {
 		condition = e->condition->parse(this);
 	}
 
+	return TYPE();
+}
+
+TYPE Interpreter::visitFunctionCall(FunctionCall* e) {
+	std::vector<TYPE> arguments;
+
+	for (Expression* arg : e->arguments)
+		arguments.push_back(arg->parse(this));
+	
+	for (TYPE arg : arguments) {
+		if (holds_alternative<double>(arg))
+			std::cout << get<double>(arg) << std::endl;
+
+		else if (holds_alternative<bool>(arg))
+			std::cout << (get<bool>(arg) ? "True" : "False") << std::endl;
+
+		else if (holds_alternative<std::string>(arg))
+			std::cout << get<std::string>(arg) << std::endl;
+	}
 	return TYPE();
 }

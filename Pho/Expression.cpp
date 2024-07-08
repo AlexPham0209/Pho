@@ -22,6 +22,8 @@ IfStatement::IfStatement(Expression* condition, Block* ifBlock, Block* elseBlock
 
 WhileLoop::WhileLoop(Expression* condition, Block* block) : condition(condition), block(block) {}
 
+FunctionCall::FunctionCall(Expression* name, TokenType paren, std::vector<Expression*> arguments) : name(name), paren(paren), arguments(arguments) {}
+
 TYPE Print::parse(Visitor* v) {
 	return v->visitPrint(this);
 }
@@ -62,4 +64,8 @@ TYPE IfStatement::parse(Visitor* v) {
 
 TYPE WhileLoop::parse(Visitor* v) {
 	return v->visitWhileLoop(this);
+}
+
+TYPE FunctionCall::parse(Visitor* v) {
+	return v->visitFunctionCall(this);
 }

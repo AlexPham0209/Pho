@@ -16,6 +16,7 @@ enum TokenType {
 	Divide,
 	Multiply,
 	Dot,
+	Divisible,
 	Increment, 
 	Decrement,
 	AddAssign,

@@ -5,6 +5,6 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "Tokenizer.h"
+#include "Lexer.h"
 
 // TODO: Reference additional headers your program requires here.

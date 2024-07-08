@@ -17,4 +17,5 @@ class Interpreter : public Visitor {
 		TYPE visitBlock(Block* e) override;
 		TYPE visitIfStatement(IfStatement* e) override;
 		TYPE visitWhileLoop(WhileLoop* e) override;
+		TYPE visitFunctionCall(FunctionCall* e) override;
 };

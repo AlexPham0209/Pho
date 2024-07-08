@@ -4,7 +4,7 @@
 #include <any>
 #include <sstream>
 #include <format>
-#include "Tokenizer.h"
+#include "Lexer.h"
 #define TYPE std::variant<double, bool, std::string>
 
 enum DataType {
@@ -115,11 +115,11 @@ public:
 };
 
 class Block : public Expression {
-public:
-	std::vector<Expression*> statements;
+	public:
+		std::vector<Expression*> statements;
 
-	Block(std::vector<Expression*> statements);
-	TYPE parse(Visitor* v) override;
+		Block(std::vector<Expression*> statements);
+		TYPE parse(Visitor* v) override;
 };
 
 class IfStatement : public Expression {
@@ -147,8 +147,18 @@ class WhileLoop : public Expression {
 		TYPE parse(Visitor* v) override;
 };
 
-class ForLoop : public Expression {
+class FunctionDeclaration : public Expression {
 
 
+};
 
+class FunctionCall : public Expression {
+public:
+	Expression* name;
+	TokenType paren;
+	std::vector<Expression*> arguments;
+
+
+	FunctionCall(Expression* name, TokenType paren, std::vector<Expression*> arguments);
+	TYPE parse(Visitor* v) override;
 };

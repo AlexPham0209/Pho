@@ -1,5 +1,5 @@
 #pragma once
-#include "Tokenizer.h"
+#include "Lexer.h"
 
 std::map<std::string, TokenType> keywords = {
 	{"ret", Return},
@@ -190,6 +190,9 @@ Token Lexer::createToken(char val) {
 			return createToken("/=", DivAssign);
 
 		return createToken(Divide);
+
+	case '%':
+		return createToken(Divisible);
 
 	case ',':
 		return createToken(Comma);

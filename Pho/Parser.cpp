@@ -57,14 +57,14 @@ Expression* Parser::ifStatement() {
 	consume(ClosedBracket, "No closed bracket");
 
 	//Creating then block
-	start++;
 	Block* block = (Block*)blocking();
 
 	//Create else statement
 	Block* elseBlock = nullptr;
-
-	if (tokens[start].type == Else)
+	if (tokens[start].type == Else) {
+		start++;
 		elseBlock = (Block*)blocking();
+	}
 
 	//Instantiating if statement object that is allocated to the heap
 	IfStatement* statement = new IfStatement(condition, block, elseBlock);
@@ -102,7 +102,6 @@ Expression* Parser::forLoop() {
 	consume(Colon, "Expect ':' after for clauses");
 	Expression* condition = equality();
 
-
 	//Set increment
 	consume(Colon, "Expect ':' after for clauses");
 	Expression* increment = nullptr;
@@ -118,7 +117,6 @@ Expression* Parser::forLoop() {
 	WhileLoop* forBody = new WhileLoop(condition, new Block(body));
 
 	std::vector<Expression*> res = {initializer, forBody};
-
 	return new Block(res);
 }
 
@@ -157,7 +155,7 @@ Expression* Parser::variableDeclaration() {
 Expression* Parser::assignment() {
 	Expression* e = equality();
 	
-	if (start <= tokens.size() && tokens[start].type == Equal) {
+	if (check(Equal)) {
 		start++;
 		Expression* value = assignment();
 
@@ -184,7 +182,7 @@ std::string Parser::identifier() {
 Expression* Parser::equality() {
 	Expression* res = comparison();
 
-	while (start < tokens.size() && (tokens[start].type == NotEqual || tokens[start].type == EqualCompare)) {
+	while (check(NotEqual) || check(EqualCompare)) {
 		TokenType op = tokens[start].type;
 		start++;
 		Expression* other = comparison();
@@ -197,7 +195,7 @@ Expression* Parser::equality() {
 Expression* Parser::comparison() {
 	Expression* res = term();
 
-	while (start < tokens.size() && (tokens[start].type == Greater || tokens[start].type == GreaterEqual || tokens[start].type == Less || tokens[start].type == LessEqual || tokens[start].type == And || tokens[start].type == Or)) {
+	while (check(Less) || check(LessEqual) || check(Greater) || check(GreaterEqual) || check(And) || check(Or) || check(Divisible)) {
 		TokenType op = tokens[start].type;
 		start++;
 		Expression* other = term();
@@ -210,7 +208,7 @@ Expression* Parser::comparison() {
 Expression* Parser::term() {
 	Expression* res = factor();
 
-	while (start < tokens.size() && (tokens[start].type == Plus || tokens[start].type == Minus)) {
+	while (check(Plus) || check(Minus)) {
 		TokenType op = tokens[start].type;
 		start++;
 
@@ -224,7 +222,7 @@ Expression* Parser::term() {
 Expression* Parser::factor() {
 	Expression* res = unary();
 
-	while (start < tokens.size() && (tokens[start].type == Divide || tokens[start].type == Multiply)) {
+	while (check(Divide) || check(Multiply)) {
 		TokenType op = tokens[start].type;
 		start++;
 
@@ -237,7 +235,7 @@ Expression* Parser::factor() {
 
 Expression* Parser::unary() {
 	//If the next token is another unary operator
-	if (start < tokens.size() && (tokens[start].type == Minus || tokens[start].type == Not)) {
+	if (check(Minus) || check(Plus)) {
 		TokenType op = tokens[start].type;
 		start++;
 
@@ -246,13 +244,38 @@ Expression* Parser::unary() {
 		return res;
 	}
 
-	return primary();
+	return call();
+}
+
+Expression* Parser::call() {
+	Expression* name = primary();
+	while (start <= tokens.size() && tokens[start].type == OpenBracket) 
+		name = finishCall(name);
+	
+	return name;
+}
+
+Expression* Parser::finishCall(Expression* name) {
+	std::vector<Expression*> arguments;
+	consume(OpenBracket, "Expected '['");
+
+	if (tokens[start].type != ClosedBracket) {
+		arguments.push_back(equality());
+
+		while (check(Comma)) {
+			consume(Comma, "Expected ','");
+			arguments.push_back(equality());
+		}
+	}
+
+	TokenType paren = consume(ClosedBracket, "Expected ']'");
+
+	return new FunctionCall(name, paren, arguments);
 }
 
 Expression* Parser::primary() {
 	Token token = tokens[start];
 	start++;
-
 	switch (token.type) {
 		case Number:
 			return new Literal(std::stof(token.value));
@@ -280,12 +303,18 @@ Expression* Parser::primary() {
 			return res;
 	}
 
-	throw SyntaxError(token.line, "Not a literal");
+	throw SyntaxError(token.line, "Expected a literal");
 }
 
-void Parser::consume(TokenType token, std::string message) {
+TokenType Parser::consume(TokenType token, std::string message) {
 	if (tokens[start].type != token)
 		throw SyntaxError(tokens[start].line, message.c_str());
 
+	TokenType prev = tokens[start].type;
 	start++;
+	return prev;
+}
+
+bool Parser::check(TokenType token) {
+	return start <= tokens.size() && tokens[start].type == token;
 }

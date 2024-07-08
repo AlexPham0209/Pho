@@ -1,5 +1,5 @@
 #include "Expression.h"
-#include "Tokenizer.h"
+#include "Lexer.h"
 #include "Error.h"
 
 class Parser {
@@ -14,8 +14,10 @@ class Parser {
 		Expression* term();
 		Expression* factor();
 		Expression* unary();
+		Expression* call();
+		Expression* finishCall(Expression* name);
 		Expression* primary();
-		void consume(TokenType token, std::string message);
+	
 		Expression* declaration();
 		Expression* ifStatement();
 		Expression* whileLoop();
@@ -23,7 +25,10 @@ class Parser {
 		Expression* variableDeclaration();
 		Expression* assignment();
 		std::string identifier();
-	
+		
+		TokenType consume(TokenType token, std::string message);
+		bool check(TokenType token);
+
 	public:
 		Parser(std::vector<Token> tokens);
 		std::vector<Expression*> createAST();
