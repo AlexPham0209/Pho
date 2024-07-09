@@ -23,10 +23,11 @@ class Parser {
 		Expression* whileLoop();
 		Expression* forLoop();
 		Expression* variableDeclaration();
+		Expression* functionDeclaration();
 		Expression* assignment();
 		std::string identifier();
 		
-		TokenType consume(TokenType token, std::string message);
+		Token consume(TokenType token, std::string message);
 		bool check(TokenType token);
 
 	public:

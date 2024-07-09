@@ -148,17 +148,22 @@ class WhileLoop : public Expression {
 };
 
 class FunctionDeclaration : public Expression {
+	public:
+		Token name;
+		std::vector<Expression*> arguments;
+		Block* body;
 
-
+		FunctionDeclaration(Token name, std::vector<Expression*> arguments, Block* body);
+		TYPE parse(Visitor* v) override;
 };
 
 class FunctionCall : public Expression {
-public:
-	Expression* name;
-	TokenType paren;
-	std::vector<Expression*> arguments;
+	public:
+		Expression* name;
+		TokenType paren;
+		std::vector<Expression*> arguments;
 
 
-	FunctionCall(Expression* name, TokenType paren, std::vector<Expression*> arguments);
-	TYPE parse(Visitor* v) override;
+		FunctionCall(Expression* name, TokenType paren, std::vector<Expression*> arguments);
+		TYPE parse(Visitor* v) override;
 };

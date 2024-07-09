@@ -24,6 +24,9 @@ WhileLoop::WhileLoop(Expression* condition, Block* block) : condition(condition)
 
 FunctionCall::FunctionCall(Expression* name, TokenType paren, std::vector<Expression*> arguments) : name(name), paren(paren), arguments(arguments) {}
 
+FunctionDeclaration::FunctionDeclaration(Token name, std::vector<Expression*> arguments, Block* body) : name(name), arguments(arguments), body(body) {}
+
+
 TYPE Print::parse(Visitor* v) {
 	return v->visitPrint(this);
 }
@@ -68,4 +71,8 @@ TYPE WhileLoop::parse(Visitor* v) {
 
 TYPE FunctionCall::parse(Visitor* v) {
 	return v->visitFunctionCall(this);
+}
+
+TYPE FunctionDeclaration::parse(Visitor* v) {
+	return v->visitFunctionDeclaration(this);
 }

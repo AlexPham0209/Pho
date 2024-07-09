@@ -39,4 +39,13 @@ TYPE Environment::getVariable(std::string name) {
 	throw std::invalid_argument("No variable");
 }
 
+void Environment::createFunction(std::string name, FunctionDeclaration* function) {
+	if (!functions.count(name) && function != nullptr)
+		functions[name] = function;
+}
+
+FunctionDeclaration* Environment::getFunction(std::string name) {
+	return functions[name];
+}
+
 

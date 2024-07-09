@@ -18,6 +18,9 @@ Expression* Parser::declaration() {
 	if (tokens[start].type == Set) 
 		return variableDeclaration();
 
+	if (tokens[start].type == Function)
+		return functionDeclaration();
+
 	return statement();
 }
 
@@ -152,6 +155,27 @@ Expression* Parser::variableDeclaration() {
 	return new VariableDeclaration(name, equality());
 }
 
+Expression* Parser::functionDeclaration() {
+	consume(Function, "Expected 'fun'");
+	Token name = consume(Identifier, "Expected identifier");
+	consume(OpenBracket, "Expect '['");
+	std::vector<Expression*> arguments;
+
+	if (tokens[start].type != ClosedBracket) {
+		arguments.push_back(equality());
+
+		while (check(Comma)) {
+			consume(Comma, "Expected ','");
+			arguments.push_back(equality());
+		}
+	}
+
+	consume(ClosedBracket, "Expected ']'");
+
+	Block* block = (Block*)blocking();
+	return new FunctionDeclaration(name, arguments, block);
+}
+
 Expression* Parser::assignment() {
 	Expression* e = equality();
 	
@@ -268,9 +292,9 @@ Expression* Parser::finishCall(Expression* name) {
 		}
 	}
 
-	TokenType paren = consume(ClosedBracket, "Expected ']'");
+	Token paren = consume(ClosedBracket, "Expected ']'");
 
-	return new FunctionCall(name, paren, arguments);
+	return new FunctionCall(name, paren.type, arguments);
 }
 
 Expression* Parser::primary() {
@@ -306,11 +330,11 @@ Expression* Parser::primary() {
 	throw SyntaxError(token.line, "Expected a literal");
 }
 
-TokenType Parser::consume(TokenType token, std::string message) {
+Token Parser::consume(TokenType token, std::string message) {
 	if (tokens[start].type != token)
 		throw SyntaxError(tokens[start].line, message.c_str());
 
-	TokenType prev = tokens[start].type;
+	Token prev = tokens[start];
 	start++;
 	return prev;
 }

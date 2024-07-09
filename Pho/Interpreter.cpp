@@ -156,20 +156,35 @@ TYPE Interpreter::visitWhileLoop(WhileLoop* e) {
 }
 
 TYPE Interpreter::visitFunctionCall(FunctionCall* e) {
-	std::vector<TYPE> arguments;
-
-	for (Expression* arg : e->arguments)
-		arguments.push_back(arg->parse(this));
+	std::map<std::string, TYPE> arguments;
 	
-	for (TYPE arg : arguments) {
-		if (holds_alternative<double>(arg))
-			std::cout << get<double>(arg) << std::endl;
+	std::string name = dynamic_cast<Variable*>(e->name)->name;
+	FunctionDeclaration* fun = environment->getFunction(name);
 
-		else if (holds_alternative<bool>(arg))
-			std::cout << (get<bool>(arg) ? "True" : "False") << std::endl;
+	for (int i = 0; i < e->arguments.size(); ++i)
+		arguments[dynamic_cast<Variable*>(fun->arguments[i])->name] = e->arguments[i]->parse(this);
 
-		else if (holds_alternative<std::string>(arg))
-			std::cout << get<std::string>(arg) << std::endl;
+	Environment* prev = this->environment;
+	this->environment = new Environment(prev);
+
+	for (auto i = arguments.begin(); i != arguments.end(); ++i) 
+		this->environment->createVariable(i->first, i->second);
+	
+	Block* body = fun->body;
+
+	TYPE ret = TYPE();
+
+	for (Expression* statement : body->statements) {
+		statement->parse(this);
 	}
+
+	delete this->environment;
+	this->environment = prev;
+	return ret;
+}
+
+TYPE Interpreter::visitFunctionDeclaration(FunctionDeclaration* e) {
+	if (environment->prev == nullptr)
+		environment->createFunction(e->name.value, e);
 	return TYPE();
 }
