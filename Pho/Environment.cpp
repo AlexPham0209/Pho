@@ -45,7 +45,13 @@ void Environment::createFunction(std::string name, FunctionDeclaration* function
 }
 
 FunctionDeclaration* Environment::getFunction(std::string name) {
-	return functions[name];
+	if (functions.count(name))
+		return functions[name];
+
+	if (prev != nullptr)
+		return prev->getFunction(name);
+
+	throw std::invalid_argument("No function");
 }
 
 
