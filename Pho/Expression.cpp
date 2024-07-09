@@ -23,9 +23,8 @@ IfStatement::IfStatement(Expression* condition, Block* ifBlock, Block* elseBlock
 WhileLoop::WhileLoop(Expression* condition, Block* block) : condition(condition), block(block) {}
 
 FunctionCall::FunctionCall(Expression* name, TokenType paren, std::vector<Expression*> arguments) : name(name), paren(paren), arguments(arguments) {}
-
 FunctionDeclaration::FunctionDeclaration(Token name, std::vector<Expression*> arguments, Block* body) : name(name), arguments(arguments), body(body) {}
-
+ReturnStatement::ReturnStatement(Expression* value) : value(value) {}
 
 TYPE Print::parse(Visitor* v) {
 	return v->visitPrint(this);
@@ -75,4 +74,8 @@ TYPE FunctionCall::parse(Visitor* v) {
 
 TYPE FunctionDeclaration::parse(Visitor* v) {
 	return v->visitFunctionDeclaration(this);
+}
+
+TYPE ReturnStatement::parse(Visitor* v) {
+	return v->visitReturnStatement(this);
 }

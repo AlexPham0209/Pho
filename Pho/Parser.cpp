@@ -42,10 +42,18 @@ Expression* Parser::statement() {
 			return forLoop();
 
 		case PrintStatement:
+			{
 			start++;
 			Expression* expression = assignment();
 			Print* print = new Print(expression);
 			return print;
+			}
+
+		case Return:
+			start++;
+			Expression* ex = assignment();
+			ReturnStatement* ret = new ReturnStatement(ex);
+			return ret;
 	}
 
 	return assignment();

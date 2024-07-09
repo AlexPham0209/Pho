@@ -22,6 +22,7 @@ class Visitor {
 		virtual TYPE visitWhileLoop(WhileLoop* e) = 0;
 		virtual TYPE visitFunctionCall(FunctionCall* e) = 0;
 		virtual TYPE visitFunctionDeclaration(FunctionDeclaration* e) = 0;
+		virtual TYPE visitReturnStatement(ReturnStatement* e) = 0;
 };
 
 class PrintVisitor : Visitor {

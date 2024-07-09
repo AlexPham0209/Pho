@@ -167,3 +167,12 @@ class FunctionCall : public Expression {
 		FunctionCall(Expression* name, TokenType paren, std::vector<Expression*> arguments);
 		TYPE parse(Visitor* v) override;
 };
+
+class ReturnStatement : public Expression {
+	public:
+		Expression* value;
+
+		ReturnStatement(Expression* value);
+		TYPE parse(Visitor* v) override;
+
+};

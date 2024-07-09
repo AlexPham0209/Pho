@@ -17,7 +17,6 @@ class SyntaxError : public std::exception {
 		const char* what() const throw() {
 			return message.c_str();
 		}
-
 };
 
 class RuntimeError : public std::exception {

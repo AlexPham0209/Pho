@@ -175,7 +175,13 @@ TYPE Interpreter::visitFunctionCall(FunctionCall* e) {
 	TYPE ret = TYPE();
 
 	for (Expression* statement : body->statements) {
-		statement->parse(this);
+		if (typeid(*statement) != typeid(ReturnStatement))
+			statement->parse(this);
+		else {
+			std::cout << "hello" << std::endl;
+			ret = statement->parse(this);
+			break;
+		}
 	}
 
 	delete this->environment;
@@ -187,4 +193,8 @@ TYPE Interpreter::visitFunctionDeclaration(FunctionDeclaration* e) {
 	if (environment->prev == nullptr)
 		environment->createFunction(e->name.value, e);
 	return TYPE();
+}
+
+TYPE Interpreter::visitReturnStatement(ReturnStatement* e) {
+	return e->value->parse(this);
 }

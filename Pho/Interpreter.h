@@ -19,4 +19,5 @@ class Interpreter : public Visitor {
 		TYPE visitWhileLoop(WhileLoop* e) override;
 		TYPE visitFunctionCall(FunctionCall* e) override;
 		TYPE visitFunctionDeclaration(FunctionDeclaration* e) override;
+		TYPE visitReturnStatement(ReturnStatement* e) override;
 };
