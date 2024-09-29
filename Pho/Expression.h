@@ -125,10 +125,10 @@ class Block : public Expression {
 class IfStatement : public Expression {
 	public:
 		Expression* condition;
-		Block* ifBlock;
-		Block* elseBlock;
+		Expression* ifBlock;
+		Expression* elseBlock;
 
-		IfStatement(Expression* condition, Block* ifBlock, Block* elseBlock);
+		IfStatement(Expression* condition, Expression* ifBlock, Expression* elseBlock);
 		~IfStatement() {
 			delete condition;
 			delete ifBlock;
@@ -141,9 +141,9 @@ class IfStatement : public Expression {
 class WhileLoop : public Expression {
 	public:
 		Expression* condition;
-		Block* block;
+		Expression* block;
 
-		WhileLoop(Expression* condition, Block* block);
+		WhileLoop(Expression* condition, Expression* block);
 		TYPE parse(Visitor* v) override;
 };
 

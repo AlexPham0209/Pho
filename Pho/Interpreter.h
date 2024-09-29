@@ -1,4 +1,5 @@
 #include "Environment.h"
+#include "Error.h"
 #include "Visitor.h"
 
 class Interpreter : public Visitor {

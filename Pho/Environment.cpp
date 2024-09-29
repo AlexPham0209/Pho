@@ -12,7 +12,7 @@ void Environment::createVariable(std::string name, TYPE value) {
 		prev->createVariable(name, value);
 
 	else
-		throw std::invalid_argument("bruh");
+		throw new RuntimeError("Variable with same name already initialized");
 }
 
 void Environment::setVariable(std::string name, TYPE value) {
@@ -26,7 +26,7 @@ void Environment::setVariable(std::string name, TYPE value) {
 		return;
 	}
 	
-	throw std::invalid_argument("No variable");
+	throw new RuntimeError("Can't set variable");
 }
 
 TYPE Environment::getVariable(std::string name) {
@@ -36,7 +36,7 @@ TYPE Environment::getVariable(std::string name) {
 	if (prev != nullptr) 
 		return prev->getVariable(name);
 
-	throw std::invalid_argument("No variable");
+	throw new RuntimeError("Variable doesn't exist in current scope");
 }
 
 void Environment::createFunction(std::string name, FunctionDeclaration* function) {
@@ -51,7 +51,7 @@ FunctionDeclaration* Environment::getFunction(std::string name) {
 	if (prev != nullptr)
 		return prev->getFunction(name);
 
-	throw std::invalid_argument("No function");
+	throw new RuntimeError("Can't get function in program");
 }
 
 

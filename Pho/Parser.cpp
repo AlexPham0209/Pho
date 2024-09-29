@@ -68,13 +68,13 @@ Expression* Parser::ifStatement() {
 	consume(ClosedBracket, "No closed bracket");
 
 	//Creating then block
-	Block* block = (Block*)blocking();
+	Expression* block = (Block*)statement();
 
 	//Create else statement
-	Block* elseBlock = nullptr;
+	Expression* elseBlock = nullptr;
 	if (tokens[start].type == Else) {
 		start++;
-		elseBlock = (Block*)blocking();
+		elseBlock = statement();
 	}
 
 	//Instantiating if statement object that is allocated to the heap
@@ -90,7 +90,7 @@ Expression* Parser::whileLoop() {
 	Expression* condition = equality();
 	consume(ClosedBracket, "No closed bracket");
 
-	Block* block = (Block*)blocking();
+	Expression* block = statement();
 
 	WhileLoop* loop = new WhileLoop(condition, block);
 	return loop;
@@ -121,7 +121,7 @@ Expression* Parser::forLoop() {
 	consume(ClosedBracket, "Expect ']' after increment");
 	
 	//Create block
-	Block* block = (Block*)blocking();
+	Expression* block = statement();
 
 	//Assembling while loop
 	std::vector<Expression*> body = {block, increment};

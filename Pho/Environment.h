@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Expression.h"
+#include "Error.h"
 
 class Environment {
 	private:

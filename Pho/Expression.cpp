@@ -18,9 +18,9 @@ VariableDeclaration::VariableDeclaration(std::string name, Expression* value) : 
 VariableAssign::VariableAssign(std::string name, Expression* value) : name(name), value(value) {}
 
 Block::Block(std::vector<Expression*> statements) : statements(statements) {}
-IfStatement::IfStatement(Expression* condition, Block* ifBlock, Block* elseBlock) : condition(condition), ifBlock(ifBlock), elseBlock(elseBlock) {}
+IfStatement::IfStatement(Expression* condition, Expression* ifBlock, Expression* elseBlock) : condition(condition), ifBlock(ifBlock), elseBlock(elseBlock) {}
 
-WhileLoop::WhileLoop(Expression* condition, Block* block) : condition(condition), block(block) {}
+WhileLoop::WhileLoop(Expression* condition, Expression* block) : condition(condition), block(block) {}
 
 FunctionCall::FunctionCall(Expression* name, TokenType paren, std::vector<Expression*> arguments) : name(name), paren(paren), arguments(arguments) {}
 FunctionDeclaration::FunctionDeclaration(Token name, std::vector<Expression*> arguments, Block* body) : name(name), arguments(arguments), body(body) {}

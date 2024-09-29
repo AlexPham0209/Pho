@@ -102,18 +102,35 @@ TYPE Interpreter::visitPrint(Print* e) {
 
 TYPE Interpreter::visitVariableDeclaration(VariableDeclaration* e) {
 	TYPE value = e->value->parse(this);
-	environment->createVariable(e->name, value);
+	try {
+		environment->createVariable(e->name, value);
+	}
+	catch (RuntimeError& e) {
+		std::cout << e.what() << std::endl;
+	}
 	return TYPE();
 }
 
 TYPE Interpreter::visitVariable(Variable* e) {
-	TYPE value = environment->getVariable(e->name);
+	TYPE value;
+	try {
+		value = environment->getVariable(e->name);
+	}
+	catch (RuntimeError& e) {
+		std::cout << e.what() << std::endl;
+	}
 	return value;
 }
 
 TYPE Interpreter::visitVariableAssign(VariableAssign* e) {
 	TYPE value = e->value->parse(this);
-	environment->setVariable(e->name, value);
+	try {
+		environment->setVariable(e->name, value);
+	}
+	catch (RuntimeError& e) {
+		std::cout << e.what() << std::endl;
+	}
+
 	return TYPE();
 }
 
@@ -134,7 +151,7 @@ TYPE Interpreter::visitIfStatement(IfStatement* e) {
 	TYPE condition = e->condition->parse(this);
 
 	if (!holds_alternative<bool>(condition))
-		throw std::invalid_argument("No boolean arguments"); 
+		throw new RuntimeError("No boolean arguments"); 
 	
 	if (get<bool>(condition))
 		e->ifBlock->parse(this);
