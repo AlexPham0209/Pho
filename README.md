@@ -39,3 +39,19 @@ if [a == 2]
   print "dude"
 else
   print "Where"
+```
+
+### While Loop
+```
+set i = 0
+while [i <= 10] {
+  print a
+  i = i + 1
+}
+```
+
+### For Loop
+```
+for [set i = 0 : i <= 10 : i = i + 1]
+  print i
+```
